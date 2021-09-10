@@ -28,9 +28,15 @@ RUN cd trunk/vice/ && \
         --without-flac \
         --without-vorbis \
         --without-mpg123 \
+        --without-png \
         --disable-parsid \
+        --disable-hardsid \
         --disable-portaudio \
         --disable-ssi2001 \
+        --disable-catweasel \
+        --disable-ipv6 \
+        --disable-new8580filter \
+        --disable-realdevice \
         --enable-lame=no \
         --enable-midi=no \
         --enable-static-lame=no \
