@@ -1,4 +1,4 @@
-version: "3.7"
+version: "3.3"
 
 services:
 
@@ -11,7 +11,3 @@ services:
       - LCP_VICE_OPTS=${LCP_VICE_OPTS:--VICIIfilter 0}
     volumes:
       - ./${LCP_BIN:-lcp.d64}:/${LCP_BIN:-lcp.d64}
-    deploy:
-      resources:
-        limits:
-          cpus: "0.01"
