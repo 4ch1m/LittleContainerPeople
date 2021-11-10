@@ -3,7 +3,7 @@ version: "3.3"
 services:
 
   lcp:
-    build: .
+    build: ./lcp
     ports:
       - ${LCP_PORT:-8080}:6081
     environment:
@@ -11,3 +11,11 @@ services:
       - LCP_VICE_OPTS=${LCP_VICE_OPTS:--VICIIfilter 0}
     volumes:
       - ./${LCP_BIN:-lcp.d64}:/${LCP_BIN:-lcp.d64}
+
+  # optional ...
+  lcp_careservice:
+    build: ./lcp_careservice
+    depends_on:
+      - lcp
+    environment:
+      - LCP_CARESERVICE_TARGETURL=${LCP_CARESERVICE_TARGETURL:-http://lcp:6081}

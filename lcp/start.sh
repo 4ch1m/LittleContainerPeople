@@ -12,9 +12,13 @@ chmod +x ~/.xinitrc
 
 /usr/share/novnc/utils/launch.sh \
     --listen 6081 \
-    --vnc localhost:5900 &
+    --vnc localhost:5900 \
+    > /dev/null 2>&1 &
 
 /usr/bin/x11vnc \
     -create \
+    -nopw \
+    -quiet \
+    -logfile /dev/null \
     -clip 720x550+0+0 \
     -forever

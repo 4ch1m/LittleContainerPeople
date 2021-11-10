@@ -1,5 +1,5 @@
 # Little Container People
-> Activision's [Little Computer People](https://en.wikipedia.org/wiki/Little_Computer_People) inside a ([Docker](https://www.docker.com/)) container. :man_dancing: :house:
+> Activision's [Little Computer People](https://en.wikipedia.org/wiki/Little_Computer_People) inside a ([Docker](https://www.docker.com/)) container. :man_dancing: :dog2: :house:
 
 ## Content
 
@@ -8,30 +8,49 @@
 * [Requirements](#requirements)
 * [Instructions](#instructions)
 * [Customization](#customization)
+  * [Game binary, Access port, Emulator options](#game-binary-access-port-emulator-options)
+  * [CareService container](#careservice-container)
 * [Links](#links)
 
 ### Concept
 
 ```
                ┌────────────────────────────────────────────────────────────┐
-               │ Container                                                  │
+               │ LCP Container                                              │
+               │                                                            │
 ┌─────────┐    │   ┌──────────────┐    ┌────────────┐    ┌──────────────┐   │
 │ Web     │    │   │ (HTML-based) │    │            │    │              │   │
 │ Browser │    │   │ VNC Viewer   │    │ VNC Server │    │ C64 Emulator │   │
-│       ◄─┼────┼───┼─►          ◄─┼────┼─►        ◄─┼────┼─►     ▲      │   │
-└─────────┘    │   └──────────────┘    └────────────┘    └───────┼──────┘   │
-               │                                                 │          │
-               ├─────────────────────────────────────────────────┼──────────┤
-               │                            [ LCP game binary ] ─┘          │
-               └────────────────────────────────────────────────────────────┘
+│       ◄─┼────┼───┼─►     ▲    ◄─┼────┼─►        ◄─┼────┼─►     ▲      │   │
+└─────────┘    │   └───────┼──────┘    └────────────┘    └───────┼──────┘   │
+               │           │                                     │          │
+               ├───────────┼─────────────────────────────────────┼──────────┤
+               │           │                [ LCP game binary ] ─┘          │
+               └───────────┼────────────────────────────────────────────────┘
+                           │
+---------------------------│----------------------------------------------------------------
+(optional)                 │
+                 ┌─────────┼─────────────────────────────────────────────┐
+                 │ LCP CareService Container                             │
+                 │         │                                             │
+                 │   ┌─────┼────────────────────┐    ┌───────────────┐   │
+                 │   |                          |    |               |   │
+                 │   | Automated Browser Action |    | Cron Schedule |   │
+                 │   |                        ◄─┼────┼─              |   │
+                 │   └──────────────────────────┘    └───────────────┘   │
+                 │                                                       │
+                 └───────────────────────────────────────────────────────┘
 ```
 
 ### Ingredients
 
-* Container: [Debian](https://hub.docker.com/_/debian)
+* Web Browser: Any HTML5 capable web browser.
+* Container OS: [Debian](https://hub.docker.com/_/debian)
 * VNC Viewer: [noVNC](https://novnc.com/)
 * VNC Server: [x11vnc](https://github.com/LibVNC/x11vnc)
 * C64 Emulator: [VICE](https://vice-emu.sourceforge.io/)
+* Browser Automation: [Puppeteer](https://github.com/puppeteer/puppeteer)
+* Cron Scheduler: Debian Cron-Daemon
 
 ### Requirements
 
@@ -52,7 +71,7 @@
 
 * Execute:  
   `docker-compose up`  
-  (This will build and start the container.)
+  (This will build and start the container(s).)
 
 
 * Open a web-browser and navigate to `http://localhost:8080`.
@@ -68,6 +87,8 @@
 
 Simply create an `.env` file right next to the [docker-compose.yml](docker-compose.yml) file and set the values as needed.
 
+##### "lcp" container
+
 * `LCP_BIN`: The file that gets auto-loaded by VICE upon container start (default: "lcp.d64").
 * `LCP_PORT`: The port under which the web interface can be reached (default: "8080").
 * `LCP_VICE_OPTS`: Additional [options/settings](https://vice-emu.sourceforge.io/vice_6.html) for the VICE emulator (default: "-VICIIfilter 0").
@@ -79,6 +100,35 @@ LCP_BIN=lcp.t64
 LCP_PORT=8181
 LCP_VICE_OPTS=-speed 500
 ```
+
+#### "lcp_careservice" container
+
+This is an optional sidecar container that can help to keep your LittleContainerPeople alive without having to actively interact with it all the time. 
+
+Every fifteen minutes the service will send these three keyboard commands to the running LCP instance; covering the essential physical needs of your LCP:
+* <kbd>Ctrl</kbd> + <kbd>F</kbd> (:hamburger: send food)
+* <kbd>Ctrl</kbd> + <kbd>W</kbd> (:cup_with_straw: fill watertank)
+* <kbd>Ctrl</kbd> + <kbd>D</kbd> (:canned_food: send dogfood)
+
+(Prevents the LCP of getting sick. :nauseated_face:)
+
+Additionally, a random activity from this list will be sent:
+* <kbd>Ctrl</kbd> + <kbd>A</kbd> (:alarm_clock: alarm clock)
+* <kbd>Ctrl</kbd> + <kbd>C</kbd> (:phone: make phone call)
+* <kbd>Ctrl</kbd> + <kbd>P</kbd> (:wave: patting)
+* <kbd>Ctrl</kbd> + <kbd>R</kbd> (:cd: send a record)
+* <kbd>Ctrl</kbd> + <kbd>B</kbd> (:closed_book: send a book)
+
+(Should improve the overall mood of your LCP.)
+
+If needed, you can configure the target URL which the careservice connects to:
+
+```
+LCP_CARESERVICE_TARGETURL=http://yourhost:8181
+```
+(Should only be relevant if you host the `lcp` and `lcp_careservice` containers on different machines.)
+
+You can disable this feature completely by commenting out or removing the according lines in [docker-compose.yml](docker-compose.yml).
 
 ### Links
 

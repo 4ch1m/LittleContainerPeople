@@ -1,0 +1,10 @@
+{
+  "name": "LCP CareService",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node lcp_careservice.js"
+  },
+  "dependencies": {
+    "puppeteer": "^10.4.0"
+  }
+}

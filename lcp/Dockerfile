@@ -15,6 +15,7 @@ RUN apt-get update && \
 
 WORKDIR /vice-emu
 
+# NOTE: checkout specific revision which contains a fix for this -> https://sourceforge.net/p/vice-emu/bugs/1416/
 RUN svn checkout -r 40671 https://svn.code.sf.net/p/vice-emu/code/trunk trunk
 
 RUN cd trunk/vice/ && \
@@ -62,12 +63,11 @@ FROM debian:bullseye-slim
 COPY --from=builder /vice-emu/trunk/vice/*.deb /vice-emu-deb/
 RUN dpkg -i /vice-emu-deb/*.deb
 
+ARG VICE_DEPENDENCIES="libgtk-3-0 libglew2.1 libvte-2.91-0 libgomp1"
+
 RUN apt-get update && \
-    apt-get install --yes \
-        libgtk-3-0 \
-        libglew2.1 \
-        libvte-2.91-0 \
-        libgomp1 \
+    apt-get install --no-install-recommends --yes \
+        ${VICE_DEPENDENCIES} \
         procps \
         net-tools \
         x11vnc \
@@ -79,5 +79,7 @@ COPY ./index.html /usr/share/novnc/index.html
 COPY ./start.sh /start.sh
 
 RUN chmod +x /start.sh
+
+EXPOSE 6081
 
 CMD ["/start.sh"]

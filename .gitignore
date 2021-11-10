@@ -1,3 +1,8 @@
 .idea
 *.iml
 .env
+**/node_modules
+**/package-lock.json
+*.[dD]64
+*.[tT]64
+*.[tT][aA][pP]
