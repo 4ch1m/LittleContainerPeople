@@ -1,6 +1,8 @@
 # Little Container People
 > Activision's [Little Computer People](https://en.wikipedia.org/wiki/Little_Computer_People) inside a ([Docker](https://www.docker.com/)) container. :man_dancing: :dog2: :house:
 
+![LCP](/lcp.png?raw=true)
+
 ## Content
 
 * [Concept](#concept)
