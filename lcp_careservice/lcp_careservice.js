@@ -73,6 +73,9 @@ const puppeteer = require("puppeteer");
             "B", // book
         ];
         await lcpAction(extraActivities[Math.floor(Math.random() * extraActivities.length)]);
+
+        log("toggle back [ CTRL ]");
+        await page.evaluate(selector => document.querySelector(selector).click(), toggleCtrlButton);
     }
 
     await browser.close();
