@@ -30,7 +30,7 @@ const puppeteer = require("puppeteer");
         let noVncStatus = await page.waitForSelector("#noVNC_status");
         let noVncStatusText = await noVncStatus.evaluate(element => element.textContent);
 
-        connected = noVncStatusText.toLowerCase().includes("connected");
+        connected = noVncStatusText.toLowerCase().startsWith("connected");
 
         if (connected) {
             log("noVNC connection established");
@@ -38,9 +38,9 @@ const puppeteer = require("puppeteer");
         } else {
             if (i < 2) {
                 log("not yet connected via noVNC; waiting to try again");
-                await page.waitForTimeout(3000);
+                await new Promise(timeout => setTimeout(timeout, 3000));
             } else {
-                log("noVNC not connected");
+                log("noVNC not connected (there might be another open connection that blocks this one)");
             }
         }
     }
@@ -53,8 +53,9 @@ const puppeteer = require("puppeteer");
 
         let lcpAction = async key => {
             log("setting focus on canvas");
-            await page.waitForSelector("canvas");
-            await page.focus("canvas");
+            let canvas = "canvas"
+            await page.waitForSelector(canvas);
+            await page.focus(canvas);
             log(`pressing [ ${key} ]`);
             await page.keyboard.press(key, { delay: 1000 });
         }
@@ -65,7 +66,7 @@ const puppeteer = require("puppeteer");
             "D" // dogfood
         ]) {
             await lcpAction(activity);
-            await page.waitForTimeout(1500);
+            await new Promise(timeout => setTimeout(timeout, 1500));
         }
 
         let extraActivities = [
@@ -73,7 +74,7 @@ const puppeteer = require("puppeteer");
             "C", // call
             "P", // patting
             "R", // record
-            "B", // book
+            "B"  // book
         ];
         await lcpAction(extraActivities[Math.floor(Math.random() * extraActivities.length)]);
 
