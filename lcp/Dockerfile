@@ -1,4 +1,4 @@
-FROM debian:bullseye-slim as builder
+FROM debian:bookworm-slim AS builder
 
 RUN apt-get update && \
     apt-get install --yes \
@@ -11,12 +11,13 @@ RUN apt-get update && \
         libgtk-3-dev \
         libvte-dev \
         libglew-dev \
+        libevdev-dev \
         dos2unix
 
 WORKDIR /vice-emu
 
-# NOTE: checkout specific revision which contains a fix for this -> https://sourceforge.net/p/vice-emu/bugs/1416/
-RUN svn checkout -r 40671 https://svn.code.sf.net/p/vice-emu/code/trunk trunk
+# NOTE: revision 45460 == v3.9
+RUN svn checkout -r 45460 https://svn.code.sf.net/p/vice-emu/code/trunk trunk
 
 RUN cd trunk/vice/ && \
     ./autogen.sh && \
@@ -30,6 +31,7 @@ RUN cd trunk/vice/ && \
         --without-vorbis \
         --without-mpg123 \
         --without-png \
+        --without-libcurl \
         --disable-parsid \
         --disable-hardsid \
         --disable-portaudio \
@@ -58,12 +60,12 @@ RUN cd trunk/vice/ && \
         --fstrans=no \
         --install=no
 
-FROM debian:bullseye-slim
+FROM debian:bookworm-slim
 
 COPY --from=builder /vice-emu/trunk/vice/*.deb /vice-emu-deb/
 RUN dpkg -i /vice-emu-deb/*.deb
 
-ARG VICE_DEPENDENCIES="libgtk-3-0 libglew2.1 libvte-2.91-0 libgomp1"
+ARG VICE_DEPENDENCIES="libgtk-3-0 libglew2.2 libvte-2.91-0 libevdev2 libgomp1"
 
 RUN apt-get update && \
     apt-get install --no-install-recommends --yes \

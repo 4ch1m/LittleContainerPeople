@@ -6,12 +6,16 @@ const puppeteer = require("puppeteer");
     }
 
     log("starting");
-    const browser = await puppeteer.launch( { headless: true,
-                                              args: [
-                                                  "--disable-gpu",
-                                                  "--disable-dev-shm-usage",
-                                                  "--no-sandbox",
-                                                  "--disable-setuid-sandbox" ]});
+    const browser = await puppeteer.launch({
+        headless: true,
+        args: [
+          "--disable-gpu",
+          "--disable-dev-shm-usage",
+          "--no-sandbox",
+          "--disable-setuid-sandbox"
+        ]
+    });
+
     const page = await browser.newPage();
 
     let targetUrl = (typeof process.env.LCP_CARESERVICE_TARGETURL !== "undefined") ? process.env.LCP_CARESERVICE_TARGETURL : "http://lcp:6081";
@@ -55,11 +59,10 @@ const puppeteer = require("puppeteer");
             await page.keyboard.press(key, { delay: 1000 });
         }
 
-        let essentialActions
         for (let activity of [
-                "F", // food
-                "W", // water
-                "D" // dogfood
+            "F", // food
+            "W", // water
+            "D" // dogfood
         ]) {
             await lcpAction(activity);
             await page.waitForTimeout(1500);

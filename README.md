@@ -13,6 +13,7 @@
   * [Game binary, Access port, Emulator options](#game-binary-access-port-emulator-options)
   * [CareService container](#careservice-container)
 * [Links](#links)
+* [License](#license)
 
 ### Concept
 
@@ -141,3 +142,7 @@ You can disable this feature completely by commenting out or removing the accord
   - [The Sims wouldn't exist without This](https://www.youtube.com/watch?v=rYz_leh9J3E) | Nostalgia Nerd
   - [The secret way every Little Computer People floppy disk was unique](https://www.youtube.com/watch?v=wZpqABBbd_I) | Retro Recipes
   - [What was Artificial Intelligence like in 1985? Ask Little Computer People!](https://www.youtube.com/watch?v=yqVlydAEKmg) | Retro Recipes
+
+### License
+
+see [LICENSE](LICENSE) file

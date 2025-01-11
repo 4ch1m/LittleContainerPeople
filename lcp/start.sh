@@ -10,7 +10,7 @@ VICE_OPTS+="${LCP_VICE_OPTS}"
 echo "exec x64 ${VICE_OPTS} '/${LCP_BIN}'" > ~/.xinitrc
 chmod +x ~/.xinitrc
 
-/usr/share/novnc/utils/launch.sh \
+/usr/share/novnc/utils/novnc_proxy \
     --listen 6081 \
     --vnc localhost:5900 \
     > /dev/null 2>&1 &
